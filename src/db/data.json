@@ -1,0 +1,25 @@
+[
+  {
+    "id": "0f079572-1c0f-404a-aad6-e6a1fac9a980",
+    "nome": "Sangue de Boi",
+    "preco": 19.9
+  },
+  {
+    "nome": "Salton safra 2020",
+    "preco": 37.9
+  },
+  {
+    "nome": "Salton safra 2024",
+    "preco": 37.9
+  },
+  {
+    "id": "5afee441-9fd9-4866-9ed9-70963f67ebd0",
+    "nome": "Salton safra 2024",
+    "preco": 37.9
+  },
+  {
+    "id": "b313db1b-4b40-4300-81d8-8bcaf09d3543",
+    "nome": "Salton safra 2024",
+    "preco": 37.9
+  }
+]
