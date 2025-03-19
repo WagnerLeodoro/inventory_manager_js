@@ -32,7 +32,8 @@ class ProdutoRepository {
         } else {
             this.produtos.splice(produtos, 1);
         }        
-        this.dataService.salvarDados(this.produtos);
+        this.dataService.data.produtos = this.produtos;
+        this.dataService.salvarDados(this.dataService.data);
     }
 
     // Atualizar um produto pelo ID
