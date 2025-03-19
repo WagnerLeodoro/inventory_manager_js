@@ -7,12 +7,17 @@ class ProdutoRepository {
     }
 
     // Listar todos os produtos
-    listarProdutos() {
+    listar() {
         return this.produtos;
     }
 
+    // Buscar um produto pelo ID
+    buscarPorId(id) {
+        return this.produtos.find(produto => produto.id === id);
+    }
+
     // Adicionar um novo produto
-    adicionarProduto({nome, preco}) {
+    adicionar({nome, preco}) {
         const produto = new Produto(nome, preco);
         this.produtos.push(produto);
         this.dataService.data.produtos = this.produtos;
@@ -20,7 +25,7 @@ class ProdutoRepository {
     }
 
     // Remover um produto pelo ID
-    removerProduto(id) {
+    remover(id) {
         let produtos = this.produtos.findIndex(produto => produto.id === id);
         if (produtos === -1) {
             throw new Error("Produto não encontrado!");
@@ -31,7 +36,7 @@ class ProdutoRepository {
     }
 
     // Atualizar um produto pelo ID
-    atualizarProduto(id, produtoAtualizado) {
+    atualizar(id, produtoAtualizado) {
         this.produtos = this.produtos.map(produto => {
             if (produto.id === id) {
 
@@ -39,12 +44,8 @@ class ProdutoRepository {
             }
             return produto;
         });
-        this.dataService.salvarDados(this.produtos);
-    }
-
-    // Buscar um produto pelo ID
-    buscarProduto(id) {
-        return this.produtos.find(produto => produto.id === id);
+        this.dataService.data.produtos = this.produtos;
+        this.dataService.salvarDados(this.dataService.data);
     }
 }
 
