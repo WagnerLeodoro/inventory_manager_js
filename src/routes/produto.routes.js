@@ -11,12 +11,11 @@ const produtoController = new ProdutoController(produtoRepository);
 const produtoRoutes = express.Router();
 
 produtoRoutes.get("/", (req, res) => produtoController.listar(req, res));
-produtoRoutes.get("/relatorio", (req, res) => produtoController.gerarRelatorio(req, res));
 produtoRoutes.get("/:id", (req, res) => produtoController.buscarPorId(req, res));
 produtoRoutes.post("/", (req, res) => produtoController.adicionar(req, res));
 produtoRoutes.put("/:id", (req, res) => produtoController.atualizar(req, res));
 produtoRoutes.delete("/:id", (req, res) => produtoController.remover(req, res));
 
-module.exports = { produtoRoutes };
+module.exports = produtoRoutes;
 
 
