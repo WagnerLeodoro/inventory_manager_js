@@ -13,11 +13,15 @@ class ProdutoRepository {
 
     // Buscar um produto pelo ID
     buscarPorId(id) {
-        return this.produtos.find(produto => produto.id === id);
+        const produto = this.produtos.find(produto => produto.id === id);
+        if (!produto) {
+            throw new Error("Produto não encontrado!");
+        }
+        return produto;
     }
 
     // Adicionar um novo produto
-    adicionar({nome, preco}) {
+    adicionar({ nome, preco }) {
         const produto = new Produto(nome, preco);
         this.produtos.push(produto);
         this.dataService.data.produtos = this.produtos;
@@ -31,22 +35,21 @@ class ProdutoRepository {
             throw new Error("Produto não encontrado!");
         } else {
             this.produtos.splice(produtos, 1);
-        }        
+        }
         this.dataService.data.produtos = this.produtos;
         this.dataService.salvarDados(this.dataService.data);
     }
 
     // Atualizar um produto pelo ID
     atualizar(id, produtoAtualizado) {
-        this.produtos = this.produtos.map(produto => {
-            if (produto.id === id) {
-
-                return produtoAtualizado;
-            }
-            return produto;
-        });
+        const index = this.produtos.findIndex(produto => produto.id === id);
+        if (index === -1) {
+            throw new Error("Produto não encontrado!");
+        }
+        this.produtos[index] = produtoAtualizado;
         this.dataService.data.produtos = this.produtos;
         this.dataService.salvarDados(this.dataService.data);
+
     }
 }
 
