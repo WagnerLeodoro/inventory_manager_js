@@ -20,6 +20,15 @@ class UserRepository {
         return usuario;
     }
 
+    //Buscar usuário pelo email
+    buscarPorEmail(email) {
+        const usuario = this.usuarios.find(u => u.email === email)
+        if(!usuario) {
+            throw new Error("Usuário não encontrado")
+        }
+        return usuario
+    }
+
     // Adicionar um novo usuário
     adicionar({nome, email, password}) {
         if(!nome || !email || !password) {
