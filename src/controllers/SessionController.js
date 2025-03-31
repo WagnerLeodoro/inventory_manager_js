@@ -1,3 +1,4 @@
+const { compare } = require("bcryptjs");
 const UserRepository = require("../repositories/UserRepository");
 const DataService = require("../services/DataService");
 const { generateSessionId } = require("../services/sessionGenerator");
@@ -8,11 +9,14 @@ class SessionController {
         this.usuarioRepository = new UserRepository(this.dataService)
     }
 
-    login(req, res) {
+    async login(req, res) {
         const {email, password} = req.body;
         try {
             const user = this.usuarioRepository.buscarPorEmail(email)
-            if(user.password !== password){
+
+            const passwordMatch = await compare(password, user.password)
+
+            if(!passwordMatch){
                 res.status(401).json({message: "Credenciais inválidas"})
             }
             req.session.user = {

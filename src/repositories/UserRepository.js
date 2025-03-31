@@ -1,3 +1,4 @@
+const { hash } = require('bcryptjs');
 const User = require('../model/User');
 
 class UserRepository {
@@ -30,11 +31,15 @@ class UserRepository {
     }
 
     // Adicionar um novo usuário
-    adicionar({nome, email, password}) {
+    async adicionar({nome, email, password}) {
         if(!nome || !email || !password) {
             throw new Error("Nome, email e senha são obrigatórios!");
         }
-        const usuario = new User(nome, email, password);
+
+        const password_hash = await hash(password, 6)
+
+        const usuario = new User(nome, email, password_hash);
+        
         this.usuarios.push(usuario);
         
         this.dataService.data.usuarios = this.usuarios;

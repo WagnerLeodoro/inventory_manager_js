@@ -12,7 +12,7 @@ class UserController {
 
     // Buscar um usuário pelo ID
     buscarPorId(req, res) {
-        const { id } = req.params;
+        const { id } = req.session.user;
         const user = this.userRepository.buscarPorId(id);
         if (!user) {
             return res.status(404).json("Usuário não encontrado!");
@@ -31,7 +31,7 @@ class UserController {
 
     // Atualizar um usuário pelo ID
     atualizar(req, res) {
-        const { id } = req.params;
+        const { id } = req.session.user;
         const { nome, email, password } = req.body;
         try {
             let usuario = this.userRepository.buscarPorId(id);
@@ -55,7 +55,7 @@ class UserController {
 
     //Remover um usuário pelo ID
     remover(req, res) {
-        const { id } = req.params;
+        const { id } = req.session.user;
         this.userRepository.deletar(id);
         return res.status(200).json("Usuário removido com sucesso!");
     }
