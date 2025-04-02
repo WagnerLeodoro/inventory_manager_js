@@ -1,7 +1,6 @@
-import { getProdutos } from "./api/index.js";
 import Header from "./components/Header.js";
-
-console.log(await getProdutos());
-
+import Produtos from "./pages/produtos.js";
 
 document.getElementById('header').innerHTML = Header()
+
+document.getElementById('app').innerHTML = await Produtos()
