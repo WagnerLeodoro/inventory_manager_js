@@ -33,6 +33,16 @@ class ProdutoController {
         }
     }
 
+    buscarPorNome(req, res) {
+        const { nome } = req.query;
+        try {
+            const produto = this.produtoRepository.buscarPorNome(nome);
+            return res.status(200).json(produto);
+        } catch (error) {
+            return res.status(404).json(error.message);
+        }
+    }
+
     remover(req, res) {
         const { id } = req.params;
         try {

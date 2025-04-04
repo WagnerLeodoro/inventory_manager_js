@@ -20,6 +20,14 @@ class ProdutoRepository {
         return produto;
     }
 
+    buscarPorNome(nome) {
+        if (nome) {
+            return this.produtos.filter(produto => produto.nome.toLowerCase().includes(nome.toLowerCase()));
+        } else {
+            return this.produtos;
+        }
+    }
+
     // Adicionar um novo produto
     adicionar({ nome, preco }) {
         const produto = new Produto(nome, preco);
