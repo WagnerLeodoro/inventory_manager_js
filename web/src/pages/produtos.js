@@ -1,15 +1,14 @@
-import { getProdutos } from "../api"
+import { deletarProdutos, getProdutos } from "../api/index.js";
+import { navegarPara } from "../router/index.js";
 
 export default async function Produtos() {
-    const produtos = await getProdutos()
-
     return `
         <div class="d-flex w-100 m-0 p-0 justify-content-between">
             <form class="d-flex w-75">
-                <input class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Pesquisar">
-                <button class="btn btn-outline-success" type="button">Pesquisar</button>
+                <input id="search" class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Pesquisar">
+                <button id="search-btn" class="btn btn-outline-success" type="button">Pesquisar</button>
             </form>
-            <button class="btn btn-primary">
+            <button id="cadastrar" class="btn btn-primary">
                 Cadastrar
             </button>
         </div>
@@ -23,25 +22,65 @@ export default async function Produtos() {
                     <th scope="col" colspan="2">Ações</th>
                     </tr>
                 </thead>
-                <tbody>
-                ${produtos.map((produto, index) => {
-                    index++
-                    return `
-                        <tr>
-                            <th scope="row">${index}</th>
-                            <td>${produto.nome}</td>
-                            <td>R$ ${produto.preco}</td>
-                            <td>
-                                <button>Editar</button>
-                            </td>
-                            <td>
-                                <button>Excluir</button>
-                            </td>
-                        </tr>
-                    `
-                }).join('')}
+                <tbody id="lista-produtos">
                 </tbody>
             </table>
         </div>
     `
 }
+
+export async function setup() {
+    const searchBtn = document.getElementById('search-btn');
+    const searchInput = document.getElementById('search');
+  
+    searchBtn.addEventListener('click', async () => {
+      const searchValue = searchInput.value;
+      await carregarProdutos(searchValue);
+    });
+  
+    await carregarProdutos();
+  }
+
+  async function carregarProdutos(searchValue = '') {
+    const produtos = await getProdutos(searchValue);
+    const tableBody = document.getElementById('lista-produtos');
+  
+    if (!tableBody) {
+      console.error('Elemento tbody não encontrado.');
+      return;
+    }
+  
+    tableBody.innerHTML = produtos.map((produto, index) => `
+            <tr>
+                <th scope="row">${index+1}</th>
+                <td>${produto.nome}</td>
+                <td>R$ ${produto.preco}</td>
+                <td>
+                    <button id="edit-btn" data-id="${produto.id}">Editar</button>
+                </td>
+                <td>
+                    <button id="delete-btn" data-id="${produto.id}">Excluir</button>
+                </td>
+            </tr>
+        `
+    ).join('')
+
+    document.getElementById('cadastrar').addEventListener('click', () => {
+      navegarPara('/produtos/cadastro')
+    })
+  
+    document.querySelectorAll('#edit-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const productId = e.target.dataset.id;
+        navegarPara(`/produtos/cadastro?id=${productId}`);
+      });
+    });
+  
+    document.querySelectorAll('#delete-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const productId = e.target.dataset.id;
+        await deletarProdutos(productId);
+        await carregarProdutos(searchValue);
+      });
+    });
+  }

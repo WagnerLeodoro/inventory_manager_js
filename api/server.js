@@ -6,13 +6,14 @@ const appRoutes = require('./src/routes');
 
 const app = express();
 
-app.use(express.json());
 
 app.use(cors({
     origin: 'http://localhost:5173',
-    methods: 'GET, POST, PUT, DELETE',
-    allowedHeaders: 'Content-Type'
-}))
+    methods: 'GET,POST,PUT,DELETE',
+    allowedHeaders: ['Content-Type']
+  }));
+
+app.use(express.json());
 
 app.use(session({
     secret: process.env.SECRET_KEY,

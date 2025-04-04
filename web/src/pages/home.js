@@ -5,7 +5,7 @@ export default function Home() {
             <h1>Bem vindo</h1>
             <p>Sistema de gerenciamento de estoques</p>
             <div class="brand">
-                <img src="../../public/logo.png" alt="cadeia de suprimentos">
+                <img src="logo.png" alt="cadeia de suprimentos">
             </div>
         </div>
     `
