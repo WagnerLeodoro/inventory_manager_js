@@ -8,6 +8,8 @@ const sessionRouter = Router()
 
 sessionRouter.post("/login", (req, res) => sessionController.login(req, res))
 
+sessionRouter.get("/profile", (req, res) => sessionController.getProfile(req, res))
+
 sessionRouter.post("/logout",authMiddleware, (req, res) => sessionController.logout(req, res))
 
 module.exports = sessionRouter

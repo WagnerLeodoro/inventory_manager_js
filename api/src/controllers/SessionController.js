@@ -31,6 +31,14 @@ class SessionController {
         }
     }
 
+    getProfile(req, res) {
+        const {user} = req.session
+        if(!user) {
+            throw new Error("Nenhum usuário logado!")
+        }
+        return res.status(200).json(user)
+    }
+
     logout(req, res) {
         req.session.destroy(error => {
             if(error) {

@@ -54,7 +54,7 @@ export async function setup() {
             <tr>
                 <th scope="row">${index+1}</th>
                 <td>${produto.nome}</td>
-                <td>R$ ${produto.preco}</td>
+                <td>R$ ${produto.preco.toFixed(2)}</td>
                 <td>
                     <button id="edit-btn" data-id="${produto.id}">Editar</button>
                 </td>

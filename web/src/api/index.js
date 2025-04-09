@@ -44,3 +44,30 @@ export async function atualizarProduto(id, data) {
     if (!response.ok) throw new Error('Erro ao atualizar produto');
     return response.json();
   }
+
+  export async function login(email, password) {
+    const response = await fetch(`${API_URL}/sessions/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({email, password}),
+      });
+      return response.json()
+  }
+
+  export const getProfile = async () => {
+    const response = await fetch(`${API_URL}/sessions/profile`, {
+      method: 'GET',
+      credentials: 'include'  // Envia o cookie da sessão automaticamente
+    });
+  
+    return response.json();
+  };
+  
+  export async function logout() {
+    const response = await fetch(`${API_URL}/sessions/logout`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+      return response.json()
+  }
