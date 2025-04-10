@@ -25,7 +25,8 @@ class SessionController {
                 email: user.email,
                 sessionId: generateSessionId()
             }
-            res.status(200).json({message: "Login bem sucedido!"})
+            const userSession = req.session.user
+            res.status(200).json(userSession)
         } catch (error) {
             res.status(400).json(error.message)
         }

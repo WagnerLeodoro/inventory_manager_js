@@ -1,4 +1,5 @@
 const express = require("express");
+const {authMiddleware} = require('../middlewares/authMiddleware.js')
 
 const DataService = require("../services/DataService.js");
 const ProdutoController = require("../controllers/ProdutoController.js");
@@ -12,9 +13,9 @@ const produtoRoutes = express.Router();
 
 produtoRoutes.get("/", (req, res) => produtoController.buscarPorNome(req, res));
 produtoRoutes.get("/:id", (req, res) => produtoController.buscarPorId(req, res));
-produtoRoutes.post("/", (req, res) => produtoController.adicionar(req, res));
-produtoRoutes.put("/:id", (req, res) => produtoController.atualizar(req, res));
-produtoRoutes.delete("/:id", (req, res) => produtoController.remover(req, res));
+produtoRoutes.post("/", authMiddleware,  (req, res) => produtoController.adicionar(req, res));
+produtoRoutes.put("/:id", authMiddleware, (req, res) => produtoController.atualizar(req, res));
+produtoRoutes.delete("/:id", authMiddleware, (req, res) => produtoController.remover(req, res));
 
 module.exports = produtoRoutes;
 

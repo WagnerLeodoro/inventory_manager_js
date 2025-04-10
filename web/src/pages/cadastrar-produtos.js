@@ -43,17 +43,16 @@ export async function submitData() {
 
         try {
             if(id) {
-                await atualizarProduto(id, { nome, preco });
-                alert('Produto atualizado com sucesso!');
+               const response = await atualizarProduto(id, { nome, preco });
+                alert(response.message);
                 window.location.href = '/produtos';
             } else {
-
-                await cadastrarProdutos(nome, preco);
-                alert('Produto cadastrado com sucesso!');
+                const response = await cadastrarProdutos(nome, preco);
+                alert(alert(response.message));
                 window.location.href = '/produtos';
             }
         } catch (error) {
-            alert('Erro ao cadastrar produto: ' + error.message);
+            alert(error.message);
         }
     });
 }

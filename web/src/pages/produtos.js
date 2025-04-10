@@ -2,7 +2,7 @@ import { deletarProdutos, getProdutos } from "../api/index.js";
 import { navegarPara } from "../router/index.js";
 
 export default async function Produtos() {
-    return `
+  return `
         <div class="d-flex w-100 m-0 p-0 justify-content-between">
             <form class="d-flex w-75">
                 <input id="search" class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Pesquisar">
@@ -30,29 +30,29 @@ export default async function Produtos() {
 }
 
 export async function setup() {
-    const searchBtn = document.getElementById('search-btn');
-    const searchInput = document.getElementById('search');
-  
-    searchBtn.addEventListener('click', async () => {
-      const searchValue = searchInput.value;
-      await carregarProdutos(searchValue);
-    });
-  
-    await carregarProdutos();
+  const searchBtn = document.getElementById('search-btn');
+  const searchInput = document.getElementById('search');
+
+  searchBtn.addEventListener('click', async () => {
+    const searchValue = searchInput.value;
+    await carregarProdutos(searchValue);
+  });
+
+  await carregarProdutos();
+}
+
+async function carregarProdutos(searchValue = '') {
+  const produtos = await getProdutos(searchValue);
+  const tableBody = document.getElementById('lista-produtos');
+
+  if (!tableBody) {
+    console.error('Elemento tbody não encontrado.');
+    return;
   }
 
-  async function carregarProdutos(searchValue = '') {
-    const produtos = await getProdutos(searchValue);
-    const tableBody = document.getElementById('lista-produtos');
-  
-    if (!tableBody) {
-      console.error('Elemento tbody não encontrado.');
-      return;
-    }
-  
-    tableBody.innerHTML = produtos.map((produto, index) => `
+  tableBody.innerHTML = produtos.map((produto, index) => `
             <tr>
-                <th scope="row">${index+1}</th>
+                <th scope="row">${index + 1}</th>
                 <td>${produto.nome}</td>
                 <td>R$ ${produto.preco.toFixed(2)}</td>
                 <td>
@@ -63,24 +63,24 @@ export async function setup() {
                 </td>
             </tr>
         `
-    ).join('')
+  ).join('')
 
-    document.getElementById('cadastrar').addEventListener('click', () => {
-      navegarPara('/produtos/cadastro')
-    })
-  
-    document.querySelectorAll('#edit-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const productId = e.target.dataset.id;
-        navegarPara(`/produtos/cadastro?id=${productId}`);
-      });
+  document.getElementById('cadastrar').addEventListener('click', () => {
+    navegarPara('/produtos/cadastro')
+  })
+
+  document.querySelectorAll('#edit-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const productId = e.target.dataset.id;
+      navegarPara(`/produtos/cadastro?id=${productId}`);
     });
-  
-    document.querySelectorAll('#delete-btn').forEach(btn => {
-      btn.addEventListener('click', async (e) => {
-        const productId = e.target.dataset.id;
-        await deletarProdutos(productId);
-        await carregarProdutos(searchValue);
-      });
+  });
+
+  document.querySelectorAll('#delete-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      const productId = e.target.dataset.id;
+      await deletarProdutos(productId);
+      await carregarProdutos(searchValue);
     });
-  }
+  });
+}
