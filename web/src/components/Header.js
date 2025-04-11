@@ -1,11 +1,13 @@
-import { logout } from "../api"
 export default function Header() {
     const user = JSON.parse(sessionStorage.getItem("user"))
-    return `
+    const header = document.getElementById('header')
+
+
+    header.innerHTML = `
         <nav class="navbar navbar-expand-lg bg-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">
-                    <img src="" alt="logo" />
+                    <img class="logo" src="./logo.png" alt="logo" />
                 </a>            
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -22,12 +24,12 @@ export default function Header() {
                             <a class="nav-link" href="/usuarios" onclick="navegarPara('/usuarios'); return false;">Usuarios</a>
                         </li>
                         ${!user ?
-                            `<li class="nav-item">
+            `<li class="nav-item">
                             <a class="nav-link" href="/login" onclick="navegarPara('/login'); return false;">Login</a>
                         </li>`
-                         : `<li class="nav-item">
+            : `<li class="nav-item">
                         <a class="nav-link">
-                            <button type="button" id="logout-btn" class="nav-link">
+                            <button type="button" id="logout-btn" class="nav-link p-0 m-0">
                             Logout
                             </button>
                         </a>
@@ -37,12 +39,12 @@ export default function Header() {
             </div>
         </nav>
     `
-}
-window.addEventListener("DOMContentLoaded", () => {
-    const logoutBtn = document.getElementById('logout-btn')
-    if(logoutBtn) {
-        logoutBtn.addEventListener('click', logout)
-        alert("Logout realizado com sucesso!")
-    }
-    return null
-})   
+
+    if (user) {
+        document.getElementById('logout-btn')?.addEventListener('click', async () => {
+          const { logout } = await import('../api/index.js');
+          await logout();
+          Header();
+        });
+      }
+} 

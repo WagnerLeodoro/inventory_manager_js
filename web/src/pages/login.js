@@ -1,4 +1,5 @@
 import { getProfile, login } from "../api";
+import Header from "../components/Header";
 import { navegarPara } from '../router'
 
 export default function Login() {
@@ -35,13 +36,10 @@ async function carregarPaginaLogin() {
     loginBtn.addEventListener('click', async () => {
         const email = emailInput.value
         const password = passwordInput.value
-        console.log(email, password);
-
         await login(email, password);
         alert("Login realizado com sucesso")
         navegarPara("/home")
+        Header()
     })
-
-
 };
 

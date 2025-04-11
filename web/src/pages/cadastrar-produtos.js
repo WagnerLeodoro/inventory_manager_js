@@ -16,11 +16,11 @@ export default async function CadastrarProdutos() {
             <form id="cadastrar-produto-form">
                 <div class="mb-3">
                     <label for="nome" class="form-label">Nome</label>
-                    <input type="text" class="form-control" id="nome" required>
+                    <input type="text" class="form-control" id="nome" required value="${id ? produto.nome : ""}">
                 </div>
                 <div class="mb-3">
                     <label for="preco" class="form-label">Preço</label>
-                    <input type="decimal"  class="form-control" id="preco" required>
+                    <input type="decimal"  class="form-control" id="preco" required value="${id ? produto.preco : ""}">
                 </div>
                 <button type="submit" class="btn btn-primary">${id ? 'Atualizar' : 'Cadastrar'}</button>
             </form>
@@ -48,7 +48,7 @@ export async function submitData() {
                 window.location.href = '/produtos';
             } else {
                 const response = await cadastrarProdutos(nome, preco);
-                alert(alert(response.message));
+                alert(response.message);
                 window.location.href = '/produtos';
             }
         } catch (error) {

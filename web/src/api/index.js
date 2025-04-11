@@ -14,13 +14,17 @@ export async function getProdutoPorId(id) {
 
 
 export const deletarProdutos = async (id) => {
-  const response = await fetch(`${API_URL}/produtos/${id}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  return response.json()
+  try {
+    const response = await fetch(`${API_URL}/produtos/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      return response.json()
+  } catch (error) {
+    alert(error.message)
+  }
 }
 
 export const cadastrarProdutos = async (nome, preco) => {
