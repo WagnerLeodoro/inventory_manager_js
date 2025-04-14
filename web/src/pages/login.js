@@ -1,4 +1,4 @@
-import {fetchGetProfile, fetchLogin} from "../api";
+import {fetchLogin} from "../api";
 import Header from "../components/Header";
 import {navegarPara} from '../router'
 
