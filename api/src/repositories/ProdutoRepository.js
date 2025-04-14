@@ -49,8 +49,7 @@ class ProdutoRepository {
     }
 
     // Atualizar um produto pelo ID
-    atualizar(id, produtoAtualizado) {
-        try {
+    atualizarProduto(id, produtoAtualizado) {
             const index = this.produtos.findIndex(produto => produto.id === id);
             if (index === -1) {
                 throw new Error("Produto não encontrado!");
@@ -58,10 +57,6 @@ class ProdutoRepository {
             this.produtos[index] = produtoAtualizado;
             this.dataService.data.produtos = this.produtos;
             this.dataService.salvarDados(this.dataService.data);
-
-        } catch (e) {
-            throw new Error("Não foi possível atualizar")
-        }
     }
 }
 

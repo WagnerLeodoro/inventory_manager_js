@@ -1,6 +1,7 @@
 import Login, { setupLogin } from "../pages/login.js";
 import Produtos, { setup } from "../pages/produtos";
 import Usuarios, {setupUsuarios} from "../pages/usuarios.js";
+import CadastrarProdutos, {submitData} from "../pages/cadastrar-produtos.js";
 
 const routes = {
     '/': 'home',
@@ -11,7 +12,7 @@ const routes = {
 }
 
 const carregarPaginas = async () => {
-    const path = window.location.pathname; 
+    const path = window.location.pathname;
     const pageName = routes[path] || 'home'
 
     const app = document.getElementById('app');
@@ -20,18 +21,15 @@ const carregarPaginas = async () => {
     app.innerHTML = await Produtos();
     await setup();
   } else if (pageName === 'cadastrar-produtos') {
-    const pageModule = await import('../pages/cadastrar-produtos.js');
-    app.innerHTML = await pageModule.default();
-    await pageModule.submitData(); // Chama a função de submitData após carregar o módulo
-
-  }else if(pageName === 'login') {
+    app.innerHTML = await CadastrarProdutos();
+    await submitData(); // Chama a função de submitData após carregar o módulo
+  } else if(pageName === 'login') {
     app.innerHTML = Login()
     await setupLogin()
   } else if (pageName === 'usuarios') {
       app.innerHTML = await Usuarios();
       await setupUsuarios()
-  }
-  else {
+  } else {
     const pageModule = await import(`../pages/${pageName}.js`);
     app.innerHTML = await pageModule.default();
   }

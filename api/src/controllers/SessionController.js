@@ -35,11 +35,15 @@ class SessionController {
     }
 
     getProfile(req, res) {
-        const {user} = req.session
-        if (!user) {
-            throw new Error("Nenhum usuário logado!")
+        try {
+            const {user} = req.session
+            if (!user) {
+                throw new Error("Nenhum usuário logado!")
+            }
+            return res.status(200).json(user)
+        } catch (e) {
+            return res.status(400).json(e)
         }
-        return res.status(200).json(user)
     }
 
     logout(req, res) {
@@ -47,6 +51,7 @@ class SessionController {
             if (error) {
                 return res.status(500).json({message: "Erro ao encerrar sessão."})
             }
+            res.clearCookie('connect.sid')
             res.status(200).json({message: "Logout realizado com sucesso!"})
         })
     }

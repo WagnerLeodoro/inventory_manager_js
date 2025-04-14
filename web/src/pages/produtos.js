@@ -2,6 +2,7 @@ import { fetchDeletarProdutos, fetchProdutos } from "../api/index.js";
 import { navegarPara } from "../router/index.js";
 
 export default async function Produtos() {
+
   return `
         <div class="d-flex w-100 m-0 p-0 justify-content-between">
             <form class="d-flex w-75">
@@ -71,6 +72,7 @@ async function carregarProdutos(searchValue = '') {
 
   document.querySelectorAll('#edit-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
+      e.preventDefault()
       const productId = e.target.dataset.id;
       navegarPara(`/produtos/cadastro?id=${productId}`);
     });
@@ -78,10 +80,11 @@ async function carregarProdutos(searchValue = '') {
 
   document.querySelectorAll('#delete-btn').forEach(btn => {
     btn.addEventListener('click', async (e) => {
+      e.preventDefault()
       const productId = e.target.dataset.id;
 
       const response = await fetchDeletarProdutos(productId);
-      console.log(response);
+      alert(response);
       
       await carregarProdutos(searchValue);
     });

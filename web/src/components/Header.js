@@ -1,8 +1,11 @@
 import {fetchLogout} from "../api/index.js";
+import {navegarPara} from "../router/index.js";
 
 export default function Header() {
-    const user = JSON.parse(sessionStorage.getItem("user"))
     const header = document.getElementById('header')
+    header.innerHTML = ''
+
+    const user = JSON.parse(sessionStorage.getItem("user"))
 
 
     header.innerHTML = `
@@ -10,11 +13,16 @@ export default function Header() {
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">
                     <img class="logo" src="./logo.png" alt="logo" />
-                </a>            
+                </a>
+                
+                <div class="d-block mx-auto text-center">
+                    ${user ? `<span class="fw-bold">Bem-vindo, ${user.nome}!</span>` : 'Olá Visitante'}
+                </div>   
+                      
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link" href="/" onclick="navegarPara('/'); return false;" >Home</a>
@@ -25,27 +33,26 @@ export default function Header() {
                         <li class="nav-item">
                             <a class="nav-link" href="/usuarios" onclick="navegarPara('/usuarios'); return false;">Usuarios</a>
                         </li>
-                        ${!user ?
-                            `<li class="nav-item">
-                                <a class="nav-link" href="/login" onclick="navegarPara('/login'); return false;">Login</a>
-                            </li>`
-                            : `<li class="nav-item">
+                       <li class="nav-item">
                                 <a class="nav-link">
-                                    <button type="button" id="logout-btn" class="nav-link p-0 m-0">
-                                    Logout
+                                    <button type="button" id="auth-btn" class="nav-link p-0 m-0">
+                                    ${user ? "Logout" : "Login" }
                                     </button>
                                 </a>
-                            </li>`}
+                            </li>
                     </ul>
                 </div>
             </div>
         </nav>
     `
 
-    if (user) {
-        document.getElementById('logout-btn')?.addEventListener('click', async () => {
-          await fetchLogout();
-          await Header()
-        });
-      }
+    document.getElementById("auth-btn").addEventListener("click", async () => {
+        if (user) {
+            await fetchLogout();
+            await Header()
+            navegarPara("/login");  // Redireciona para a página de login
+        } else {
+            navegarPara("/login");  // Redireciona para a página de login
+        }
+    });
 }

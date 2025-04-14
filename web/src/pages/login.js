@@ -4,7 +4,7 @@ import {navegarPara} from '../router'
 
 export default function Login() {
     return `
-        <div class="container card w-50 bg-light">
+        <div class="container card w-75 bg-light">
             <form class="container p-4" id="login-form">
                 <div class="mb-3">
                     <label for="email" class="form-label">Email: </label>
@@ -38,14 +38,14 @@ async function carregarPaginaLogin() {
         try {
             const email = emailInput.value
             const password = passwordInput.value
-            const response = await fetchLogin(email, password);
+            const {nome} = await fetchLogin(email, password);
 
-            alert(response.message)
+            alert(`Usuario ${nome} logado com sucesso!`)
+            await Header()
             navegarPara("/home")
-            Header()
         } catch (error) {
             alert(error.message)
         }
     })
-};
+}
 

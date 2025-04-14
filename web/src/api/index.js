@@ -43,8 +43,8 @@ export async function fetchAtualizarProduto(id, data) {
     const response = await fetch(`${API_URL}/produtos/${id}`, {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},
-        credentials: 'include',
         body: JSON.stringify(data),
+        credentials: 'include'
     });
 
     if (!response.ok) throw new Error('Erro ao atualizar produto');
@@ -60,13 +60,19 @@ export async function fetchLogin(email, password) {
             body: JSON.stringify({email, password}),
         });
 
-        const user = await response.json()
-        console.log(user)
+        if (!response.ok) {
+            const erro = await response.json();
+            throw new Error(erro.message || 'Erro ao fazer login');
+        }
+
+        const user = await response.json();
+
+        // Salva o usuário no sessionStorage para o header mostrar o nome
         sessionStorage.setItem('user', JSON.stringify(user));
 
-        return user
+        return user;
     } catch (error) {
-        return error.message
+        return error
     }
 }
 
@@ -77,8 +83,14 @@ export const fetchGetProfile = async () => {
         credentials: 'include'
     });
 
+    if (!response.ok) {
+        const erro = await response.json();
+        throw new Error(erro.message || 'Erro ao obter perfil');
+    }
+
     const user = await response.json();
 
+    // Salva o usuário no sessionStorage para o header mostrar o nome
     sessionStorage.setItem('user', JSON.stringify(user));
 
     return user;

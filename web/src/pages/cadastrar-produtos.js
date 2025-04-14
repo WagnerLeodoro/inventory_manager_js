@@ -53,7 +53,7 @@ export async function submitData() {
                 navegarPara('/produtos');
             }
         } catch (error) {
-            alert(error.message);
+            alert(error);
         }
     });
 }

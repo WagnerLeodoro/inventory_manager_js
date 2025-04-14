@@ -10,7 +10,7 @@ const app = express();
 app.use(cors({
     origin: 'http://localhost:5173',
     methods: 'GET,POST,PUT,DELETE',
-    allowedHeaders: ['Content-Type'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
 
@@ -21,7 +21,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        httpOnly: true, 
+        httpOnly: true,
         secure: false,
         sameSite: 'lax'
     }
