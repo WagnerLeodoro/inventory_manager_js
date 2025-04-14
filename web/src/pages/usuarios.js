@@ -1,6 +1,100 @@
+import { navegarPara } from "../router/index.js";
+import {fetchUsuarios} from "../api/index.js";
 
-export default function Usuarios() {
+export default async function Usuarios() {
     return `
-        <h1>Página dos usuários</h1>
+        <div class="d-flex w-100 m-0 p-0 justify-content-between">
+            <form class="d-flex w-75">
+                <input id="search" class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Pesquisar">
+                <button id="search-user-btn" class="btn btn-outline-success" type="button">Pesquisar</button>
+            </form>
+            <button id="cadastrar-usuario" class="btn btn-primary">
+                Cadastrar
+            </button>
+        </div>
+        <div class="container-fluid table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Email</th>
+                    <th scope="col" colspan="2">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-usuarios">
+                </tbody>
+            </table>
+        </div>
     `
+}
+
+export async function setupUsuarios() {
+    const searchBtn = document.getElementById('search-user-btn');
+    const searchInput = document.getElementById('search');
+
+    searchBtn.addEventListener('click', async () => {
+        const searchValue = searchInput.value;
+        await carregarUsuarios(searchValue);
+    });
+
+    await carregarUsuarios();
+}
+
+async function carregarUsuarios(searchValue = '') {
+   try {
+       const usuarios = await fetchUsuarios(searchValue);
+       const tableBody = document.getElementById('lista-usuarios');
+
+       if (!tableBody) {
+           console.error('Elemento tbody não encontrado.');
+           return;
+       }
+
+       if(!usuarios.length) {
+           return tableBody.innerHTML = `
+            <tr>
+                <td colspan="4" class="text-center">Nenhum usuario encontrado!</td>
+            </tr>
+        `;
+       } else {
+           tableBody.innerHTML = usuarios.map((usuario, index) => `
+            <tr>
+                <th scope="row">${index + 1}</th>
+                <td>${usuario.nome}</td>
+                <td>${usuario.email}</td>
+                <td>
+                    <button id="edit-user-btn" data-id="${usuario.id}">Editar</button>
+                </td>
+                <td>
+                    <button id="delete-user-btn" data-id="${usuario.id}">Excluir</button>
+                </td>
+            </tr>
+        `
+           ).join('')
+       }
+
+       document.getElementById('cadastrar-usuario').addEventListener('click', () => {
+           navegarPara('/usuarios/cadastro-usuarios')
+       })
+
+       document.querySelectorAll('#edit-user-btn').forEach(btn => {
+           btn.addEventListener('click', (e) => {
+               const productId = e.target.dataset.id;
+               navegarPara(`/produtos/cadastro?id=${productId}`);
+           });
+       });
+
+       /*document.querySelectorAll('#delete-user-btn').forEach(btn => {
+           btn.addEventListener('click', async (e) => {
+               const productId = e.target.dataset.id;
+
+               const response = await fetchDeletarProdutos(productId);
+               console.log(response);
+
+               await carregarProdutos(searchValue);
+           });
+       });*/
+   } catch (e) {
+       alert(error.message)
+   }
 }

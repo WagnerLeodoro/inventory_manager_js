@@ -1,4 +1,5 @@
-import { atualizarProduto, cadastrarProdutos, getProdutoPorId } from "../api";
+import { fetchAtualizarProduto, fetchCadastrarProdutos, fetchProdutoPorId } from "../api";
+import {navegarPara} from "../router/index.js";
 
 export default async function CadastrarProdutos() {
     const params = new URLSearchParams(window.location.search);
@@ -6,7 +7,7 @@ export default async function CadastrarProdutos() {
     let produto = { name: "", price: "" };
   
     if (id) {
-      produto = await getProdutoPorId(id);
+      produto = await fetchProdutoPorId(id);
     }
   
     return `
@@ -43,13 +44,13 @@ export async function submitData() {
 
         try {
             if(id) {
-               const response = await atualizarProduto(id, { nome, preco });
+               const response = await fetchAtualizarProduto(id, { nome, preco });
                 alert(response.message);
-                window.location.href = '/produtos';
+                navegarPara('/produtos');
             } else {
-                const response = await cadastrarProdutos(nome, preco);
+                const response = await fetchCadastrarProdutos(nome, preco);
                 alert(response.message);
-                window.location.href = '/produtos';
+                navegarPara('/produtos');
             }
         } catch (error) {
             alert(error.message);

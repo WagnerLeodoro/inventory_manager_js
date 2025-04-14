@@ -1,6 +1,6 @@
-import { getProfile, login } from "../api";
+import {fetchGetProfile, fetchLogin} from "../api";
 import Header from "../components/Header";
-import { navegarPara } from '../router'
+import {navegarPara} from '../router'
 
 export default function Login() {
     return `
@@ -22,6 +22,7 @@ export default function Login() {
     </div>
     `
 }
+
 export async function setupLogin() {
     await carregarPaginaLogin()
 }
@@ -34,12 +35,17 @@ async function carregarPaginaLogin() {
 
     // Login do usuário
     loginBtn.addEventListener('click', async () => {
-        const email = emailInput.value
-        const password = passwordInput.value
-        await login(email, password);
-        alert("Login realizado com sucesso")
-        navegarPara("/home")
-        Header()
+        try {
+            const email = emailInput.value
+            const password = passwordInput.value
+            const response = await fetchLogin(email, password);
+
+            alert(response.message)
+            navegarPara("/home")
+            Header()
+        } catch (error) {
+            alert(error.message)
+        }
     })
 };
 

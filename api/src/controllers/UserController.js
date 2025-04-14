@@ -21,6 +21,17 @@ class UserController {
         }
     }
 
+    // Pesquisar por um usuário
+    pesquisarUsuarios(req, res) {
+        const { nome } = req.query;
+        const user = this.userRepository.pesquisarUsuarios(nome);
+        if (!user) {
+            return res.status(404).json("Usuário não encontrado!");
+        } else {
+            return res.status(200).json(user);
+        }
+    }
+
     // Adicionar um novo usuário
     adicionar(req, res) {
         const { nome, email, password } = req.body;

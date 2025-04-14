@@ -30,6 +30,14 @@ class UserRepository {
         return usuario
     }
 
+    pesquisarUsuarios(query) {
+        const usuario = this.usuarios.filter(u => u.nome.toLowerCase().includes(query.toLowerCase()))
+        if(!usuario) {
+            throw new Error("Nenhum usuário não encontrado")
+        }
+        return usuario
+    }
+
     // Adicionar um novo usuário
     async adicionar({nome, email, password}) {
         if(!nome || !email || !password) {

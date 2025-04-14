@@ -1,3 +1,5 @@
+import {fetchLogout} from "../api/index.js";
+
 export default function Header() {
     const user = JSON.parse(sessionStorage.getItem("user"))
     const header = document.getElementById('header')
@@ -24,16 +26,16 @@ export default function Header() {
                             <a class="nav-link" href="/usuarios" onclick="navegarPara('/usuarios'); return false;">Usuarios</a>
                         </li>
                         ${!user ?
-            `<li class="nav-item">
-                            <a class="nav-link" href="/login" onclick="navegarPara('/login'); return false;">Login</a>
-                        </li>`
-            : `<li class="nav-item">
-                        <a class="nav-link">
-                            <button type="button" id="logout-btn" class="nav-link p-0 m-0">
-                            Logout
-                            </button>
-                        </a>
-                    </li>`}
+                            `<li class="nav-item">
+                                <a class="nav-link" href="/login" onclick="navegarPara('/login'); return false;">Login</a>
+                            </li>`
+                            : `<li class="nav-item">
+                                <a class="nav-link">
+                                    <button type="button" id="logout-btn" class="nav-link p-0 m-0">
+                                    Logout
+                                    </button>
+                                </a>
+                            </li>`}
                     </ul>
                 </div>
             </div>
@@ -42,9 +44,8 @@ export default function Header() {
 
     if (user) {
         document.getElementById('logout-btn')?.addEventListener('click', async () => {
-          const { logout } = await import('../api/index.js');
-          await logout();
-          Header();
+          await fetchLogout();
+          await Header()
         });
       }
-} 
+}

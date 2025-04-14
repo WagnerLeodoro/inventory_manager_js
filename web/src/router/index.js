@@ -1,5 +1,6 @@
-import { setupLogin } from "../pages/login.js";
+import Login, { setupLogin } from "../pages/login.js";
 import Produtos, { setup } from "../pages/produtos";
+import Usuarios, {setupUsuarios} from "../pages/usuarios.js";
 
 const routes = {
     '/': 'home',
@@ -24,9 +25,11 @@ const carregarPaginas = async () => {
     await pageModule.submitData(); // Chama a função de submitData após carregar o módulo
 
   }else if(pageName === 'login') {
-    const pageModule = await import('../pages/login.js')
-    app.innerHTML = pageModule.default()
+    app.innerHTML = Login()
     await setupLogin()
+  } else if (pageName === 'usuarios') {
+      app.innerHTML = await Usuarios();
+      await setupUsuarios()
   }
   else {
     const pageModule = await import(`../pages/${pageName}.js`);

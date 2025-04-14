@@ -1,4 +1,4 @@
-import { deletarProdutos, getProdutos } from "../api/index.js";
+import { fetchDeletarProdutos, fetchProdutos } from "../api/index.js";
 import { navegarPara } from "../router/index.js";
 
 export default async function Produtos() {
@@ -42,7 +42,7 @@ export async function setup() {
 }
 
 async function carregarProdutos(searchValue = '') {
-  const produtos = await getProdutos(searchValue);
+  const produtos = await fetchProdutos(searchValue);
   const tableBody = document.getElementById('lista-produtos');
 
   if (!tableBody) {
@@ -79,7 +79,10 @@ async function carregarProdutos(searchValue = '') {
   document.querySelectorAll('#delete-btn').forEach(btn => {
     btn.addEventListener('click', async (e) => {
       const productId = e.target.dataset.id;
-      await deletarProdutos(productId);
+
+      const response = await fetchDeletarProdutos(productId);
+      console.log(response);
+      
       await carregarProdutos(searchValue);
     });
   });

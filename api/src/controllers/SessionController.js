@@ -1,7 +1,7 @@
-const { compare } = require("bcryptjs");
+const {compare} = require("bcryptjs");
 const UserRepository = require("../repositories/UserRepository");
 const DataService = require("../services/DataService");
-const { generateSessionId } = require("../services/sessionGenerator");
+const {generateSessionId} = require("../services/sessionGenerator");
 
 class SessionController {
     constructor() {
@@ -16,25 +16,27 @@ class SessionController {
 
             const passwordMatch = await compare(password, user.password)
 
-            if(!passwordMatch){
+            if (!passwordMatch || !user) {
                 res.status(401).json({message: "Credenciais inválidas"})
+            } else {
+
+                req.session.user = {
+                    id: user.id,
+                    nome: user.nome,
+                    email: user.email,
+                    sessionId: generateSessionId()
+                }
+                const userSession = req.session.user
+                return res.status(200).json(userSession)
             }
-            req.session.user = {
-                id: user.id,
-                nome: user.nome,
-                email: user.email,
-                sessionId: generateSessionId()
-            }
-            const userSession = req.session.user
-            res.status(200).json(userSession)
         } catch (error) {
-            res.status(400).json(error.message)
+            return res.status(400).json(error.message)
         }
     }
 
     getProfile(req, res) {
         const {user} = req.session
-        if(!user) {
+        if (!user) {
             throw new Error("Nenhum usuário logado!")
         }
         return res.status(200).json(user)
@@ -42,7 +44,7 @@ class SessionController {
 
     logout(req, res) {
         req.session.destroy(error => {
-            if(error) {
+            if (error) {
                 return res.status(500).json({message: "Erro ao encerrar sessão."})
             }
             res.status(200).json({message: "Logout realizado com sucesso!"})
