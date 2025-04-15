@@ -18,7 +18,6 @@ export default function Login() {
                     <button id="login-btn" type="button" class="w-50 btn btn-success">Entrar</button>
                 </div>
             </form>
-             <p id="message"></p>
     </div>
     `
 }
@@ -38,11 +37,14 @@ async function carregarPaginaLogin() {
         try {
             const email = emailInput.value
             const password = passwordInput.value
-            const {nome} = await fetchLogin(email, password);
-
-            alert(`Usuario ${nome} logado com sucesso!`)
-            await Header()
+            const response = await fetchLogin(email, password);
+            if(response.status === 200) {
+                alert("Login realizado com sucesso!")
+            } else {
+                alert(response.message)
+            }
             navegarPara("/home")
+            await Header()
         } catch (error) {
             alert(error.message)
         }

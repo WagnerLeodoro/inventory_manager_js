@@ -47,8 +47,10 @@ export async function fetchAtualizarProduto(id, data) {
         credentials: 'include'
     });
 
-    if (!response.ok) throw new Error('Erro ao atualizar produto');
-    return response.json();
+    if (!response.ok) {
+        return response.json("Não foi possível atualizar");
+    }
+    return response.json()
 }
 
 export async function fetchLogin(email, password) {
@@ -63,14 +65,14 @@ export async function fetchLogin(email, password) {
         if (!response.ok) {
             const erro = await response.json();
             throw new Error(erro.message || 'Erro ao fazer login');
+        } else {
+            const user = await response.json();
+
+            // Salva o usuário no sessionStorage para o header mostrar o nome
+            sessionStorage.setItem('user', JSON.stringify(user));
+
+            return user;
         }
-
-        const user = await response.json();
-
-        // Salva o usuário no sessionStorage para o header mostrar o nome
-        sessionStorage.setItem('user', JSON.stringify(user));
-
-        return user;
     } catch (error) {
         return error
     }
@@ -84,16 +86,15 @@ export const fetchGetProfile = async () => {
     });
 
     if (!response.ok) {
-        const erro = await response.json();
-        throw new Error(erro.message || 'Erro ao obter perfil');
+        return null
+    } else {
+        const user = await response.json();
+
+        // Salva o usuário no sessionStorage para o header mostrar o nome
+        sessionStorage.setItem('user', JSON.stringify(user));
+
+        return user;
     }
-
-    const user = await response.json();
-
-    // Salva o usuário no sessionStorage para o header mostrar o nome
-    sessionStorage.setItem('user', JSON.stringify(user));
-
-    return user;
 };
 
 export async function fetchLogout() {
@@ -117,13 +118,53 @@ export async function fetchUsuarios(searchValue = "") {
 }
 
 export const fetchCadastrarUsuarios = async (nome, email, password) => {
-  const response = await fetch(`${API_URL}/users`, {
-    method: 'POST',
-    body: JSON.stringify({nome, email, password}),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: "include",
-  })
-  return response.json()
+    const response = await fetch(`${API_URL}/users`, {
+        method: 'POST',
+        body: JSON.stringify({nome, email, password}),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    return response.json()
+}
+
+export async function fetchUsuarioPorId(id) {
+    try {
+        const response = await fetch(`${API_URL}/users/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        if (!response.ok) throw new Error('Usuário não encontrado');
+        return response.json();
+    } catch (e) {
+        return e.message
+    }
+}
+
+export async function fetchAtualizarUsuario(id, data) {
+    const response = await fetch(`${API_URL}/users/${id}`, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data),
+        credentials: 'include'
+    });
+
+    if (!response.ok) throw new Error('Erro ao atualizar usuario');
+    return response.json();
+}
+
+export const fetchDeletarUsuarios = async (id) => {
+    try {
+        const response = await fetch(`${API_URL}/users/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+        })
+        return response.json()
+    } catch (error) {
+        alert(error.message)
+    }
 }

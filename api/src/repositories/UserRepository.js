@@ -75,6 +75,8 @@ class UserRepository {
         } else {
             this.usuarios.splice(usuario, 1);
         }
+        this.dataService.data.usuarios = this.usuarios;
+        this.dataService.salvarDados(this.dataService.data);
     }
 }
 

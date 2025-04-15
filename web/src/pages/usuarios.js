@@ -1,5 +1,5 @@
-import { navegarPara } from "../router/index.js";
-import {fetchUsuarios} from "../api/index.js";
+import {navegarPara} from "../router/index.js";
+import {fetchDeletarUsuarios, fetchGetProfile, fetchUsuarios} from "../api/index.js";
 
 export default async function Usuarios() {
     return `
@@ -33,31 +33,42 @@ export async function setupUsuarios() {
     const searchInput = document.getElementById('search');
 
     searchBtn.addEventListener('click', async () => {
-        const searchValue = searchInput.value;
-        await carregarUsuarios(searchValue);
+        const estaLogado = await fetchGetProfile()
+        let searchValue = searchInput.value;
+        if (estaLogado) {
+            await carregarUsuarios(searchValue);
+        } else {
+            alert("Faça login primeiro")
+        }
     });
+
+    document.getElementById('cadastrar-usuario').addEventListener('click', (e) => {
+        e.preventDefault()
+        navegarPara('/usuarios/cadastro')
+    })
 
     await carregarUsuarios();
 }
 
 async function carregarUsuarios(searchValue = '') {
-   try {
-       const usuarios = await fetchUsuarios(searchValue);
-       const tableBody = document.getElementById('lista-usuarios');
+    try {
+        const usuarios = await fetchUsuarios(searchValue);
 
-       if (!tableBody) {
-           console.error('Elemento tbody não encontrado.');
-           return;
-       }
+        const tableBody = document.getElementById('lista-usuarios');
 
-       if(!usuarios.length) {
-           return tableBody.innerHTML = `
+        if (!tableBody) {
+            console.error('Elemento tbody não encontrado.');
+            return;
+        }
+
+        if (!usuarios.length) {
+            return tableBody.innerHTML = `
             <tr>
                 <td colspan="4" class="text-center">Nenhum usuario encontrado!</td>
             </tr>
         `;
-       } else {
-           tableBody.innerHTML = usuarios.map((usuario, index) => `
+        } else {
+            tableBody.innerHTML = usuarios.map((usuario, index) => `
             <tr>
                 <th scope="row">${index + 1}</th>
                 <td>${usuario.nome}</td>
@@ -70,31 +81,28 @@ async function carregarUsuarios(searchValue = '') {
                 </td>
             </tr>
         `
-           ).join('')
-       }
+            ).join('')
+        }
 
-       document.getElementById('cadastrar-usuario').addEventListener('click', () => {
-           navegarPara('/usuarios/cadastro-usuarios')
-       })
 
-       document.querySelectorAll('#edit-user-btn').forEach(btn => {
-           btn.addEventListener('click', (e) => {
-               const productId = e.target.dataset.id;
-               navegarPara(`/produtos/cadastro?id=${productId}`);
-           });
-       });
+        document.querySelectorAll('#edit-user-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const usuarioId = e.target.dataset.id;
+                navegarPara(`/usuarios/cadastro?id=${usuarioId}`);
+            });
+        });
 
-       /*document.querySelectorAll('#delete-user-btn').forEach(btn => {
-           btn.addEventListener('click', async (e) => {
-               const productId = e.target.dataset.id;
+        document.querySelectorAll('#delete-user-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const usuarioId = e.target.dataset.id;
 
-               const response = await fetchDeletarProdutos(productId);
-               console.log(response);
+                const response = await fetchDeletarUsuarios(usuarioId);
+                alert(response.message)
 
-               await carregarProdutos(searchValue);
-           });
-       });*/
-   } catch (e) {
-       alert(error.message)
-   }
+                await carregarUsuarios(searchValue);
+            });
+        });
+    } catch (error) {
+        alert(error.message)
+    }
 }

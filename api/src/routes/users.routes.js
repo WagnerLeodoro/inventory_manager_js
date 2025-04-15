@@ -15,7 +15,7 @@ userRoutes.post("/", (req, res) => userController.adicionar(req, res));
 
 userRoutes.get("/", authMiddleware, (req, res) => userController.pesquisarUsuarios(req, res));
 
-userRoutes.get("/:id", authMiddleware, (req, res) => userController.buscarPorId(req, res));
+userRoutes.get("/:id", (req, res) => userController.buscarPorId(req, res));
 
 userRoutes.put("/:id", authMiddleware, (req, res) => userController.atualizar(req, res));
 
