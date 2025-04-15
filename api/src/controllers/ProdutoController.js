@@ -8,7 +8,7 @@ class ProdutoController {
         const produto = { nome, preco };
         try {
             this.produtoRepository.adicionar(produto);
-            return res.status(201).json("Produto cadastrado com sucesso!");
+            return res.status(201).json({message: "Produto cadastrado com sucesso!"});
         } catch (error) {
             return res.status(400).json(error.message);
         }
@@ -47,7 +47,7 @@ class ProdutoController {
         const { id } = req.params;
         try {
             this.produtoRepository.remover(id);
-            return res.status(200).json("Produto removido com sucesso!");
+            return res.status(200).json({message: "Produto removido com sucesso!"});
         } catch (error) {
             return res.status(404).json(error.message);
         }
@@ -56,12 +56,15 @@ class ProdutoController {
     atualizar(req, res) {
         const { id } = req.params;
         const { nome, preco } = req.body;
-
+        try {
             let produto = this.produtoRepository.buscarPorId(id);
             produto.nome = nome ?? produto.nome;
             produto.preco = preco ?? produto.preco;
             this.produtoRepository.atualizarProduto(id, produto);
-            return res.status(200).json("Produto atualizado com sucesso!");
+            return res.status(200).json({message: "Produto atualizado com sucesso!"});
+        } catch (error) {
+            return res.status(404).json(error.message);
+        }
 
     }
 }

@@ -13,7 +13,6 @@ export default async function CadastrarProdutos() {
     return `
         <h2>${id ? 'Editar Produto' : 'Cadastrar Produto'}</h2>
         <div class="container">
-            <h1>Cadastrar Produto</h1>
             <form id="cadastrar-produto-form">
                 <div class="mb-3">
                     <label for="nome" class="form-label">Nome</label>

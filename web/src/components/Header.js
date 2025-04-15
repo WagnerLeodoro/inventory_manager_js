@@ -1,12 +1,12 @@
-import {fetchLogout} from "../api/index.js";
+import {fetchGetProfile, fetchLogout} from "../api/index.js";
 import {navegarPara} from "../router/index.js";
 
-export default function Header() {
+export default async function Header() {
     const header = document.getElementById('header')
     header.innerHTML = ''
 
     const user = JSON.parse(sessionStorage.getItem("user"))
-
+    const estaLogado = await fetchGetProfile()
 
     header.innerHTML = `
         <nav class="navbar navbar-expand-lg bg-light">
@@ -16,7 +16,7 @@ export default function Header() {
                 </a>
                 
                 <div class="d-block mx-auto text-center">
-                    ${user ? `<span class="fw-bold">Bem-vindo, ${user.nome}!</span>` : 'Olá Visitante'}
+                    ${estaLogado ? `<span class="fw-bold">Bem-vindo, ${user.nome}!</span>` : 'Olá Visitante'}
                 </div>   
                       
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +36,7 @@ export default function Header() {
                        <li class="nav-item">
                                 <a class="nav-link">
                                     <button type="button" id="auth-btn" class="nav-link p-0 m-0">
-                                    ${user ? "Logout" : "Login" }
+                                    ${estaLogado ? "Logout" : "Login" }
                                     </button>
                                 </a>
                             </li>
@@ -47,7 +47,7 @@ export default function Header() {
     `
 
     document.getElementById("auth-btn").addEventListener("click", async () => {
-        if (user) {
+        if (user || estaLogado === null) {
             await fetchLogout();
             await Header()
             navegarPara("/login");  // Redireciona para a página de login

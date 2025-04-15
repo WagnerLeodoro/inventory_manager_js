@@ -17,9 +17,8 @@ class SessionController {
             const passwordMatch = await compare(password, user.password)
 
             if (!passwordMatch || !user) {
-                res.status(401).json({message: "Credenciais inválidas"})
+               return res.status(401).json({message: "Credenciais inválidas"})
             } else {
-
                 req.session.user = {
                     id: user.id,
                     nome: user.nome,
@@ -27,7 +26,7 @@ class SessionController {
                     sessionId: generateSessionId()
                 }
                 const userSession = req.session.user
-                return res.status(200).json(userSession)
+                return res.status(200).json({message: "Login realizado com sucesso", data: userSession})
             }
         } catch (error) {
             return res.status(400).json(error.message)

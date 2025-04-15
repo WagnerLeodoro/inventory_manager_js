@@ -2,6 +2,8 @@ import Login, { setupLogin } from "../pages/login.js";
 import Produtos, { setup } from "../pages/produtos";
 import Usuarios, {setupUsuarios} from "../pages/usuarios.js";
 import CadastrarProdutos, {submitData} from "../pages/cadastrar-produtos.js";
+import CadastrarUsuarios, {submitUserData} from "../pages/cadastrar-usuarios.js";
+import Header from "../components/Header.js";
 
 const routes = {
     '/': 'home',
@@ -9,6 +11,8 @@ const routes = {
     '/produtos': 'produtos',
     '/login': 'login',
     '/produtos/cadastro': 'cadastrar-produtos',
+    '/usuarios/cadastro': 'cadastrar-usuarios',
+
 }
 
 const carregarPaginas = async () => {
@@ -29,6 +33,9 @@ const carregarPaginas = async () => {
   } else if (pageName === 'usuarios') {
       app.innerHTML = await Usuarios();
       await setupUsuarios()
+  } else if (pageName === 'cadastrar-usuarios') {
+      app.innerHTML = await CadastrarUsuarios();
+      await submitUserData()
   } else {
     const pageModule = await import(`../pages/${pageName}.js`);
     app.innerHTML = await pageModule.default();
